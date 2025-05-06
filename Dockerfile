@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     python3-dev \
     libffi-dev \
+    zlib1g-dev \
     default-libmysqlclient-dev \
     gcc
 
