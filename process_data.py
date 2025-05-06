@@ -5,27 +5,33 @@ import os
 from datetime import datetime
 
 def processar_arquivos(pasta):
-    # 1. Localizar todos os arquivos .xls na pasta 'arquivos/'
-    arquivos_xls = [os.path.join(pasta, f) for f in os.listdir(pasta) if f.endswith(".xls")]
+    # 1. Localizar todos os arquivos .xls .ods na pasta 'arquivos/'
+    arquivos_planilhas = [os.path.join(pasta, f) for f in os.listdir(pasta) if f.endswith((".xls", ".ods"))]
 
-    if not arquivos_xls:
-        raise ValueError("Nenhum arquivo .xls encontrado na pasta.")
+    if not arquivos_planilhas:
+        raise ValueError("Nenhum arquivo .xls ou .ods encontrado na pasta.")
 
     # 2. Lista para armazenar DataFrames
     dfs = []
 
     # 3. Iterar sobre cada arquivo e aplicar o processamento inicial
-    for caminho in arquivos_xls:
+    for caminho in arquivos_planilhas:
         print(f"Lendo: {caminho}")
         try:
-            df = pd.read_excel(caminho, engine='xlrd')
+            extensao = os.path.splitext(caminho)[1].lower()
+
+            if extensao == ".xls":
+                df = pd.read_excel(caminho, engine="xlrd")
+            elif extensao == ".ods":
+                df = pd.read_excel(caminho, engine="odf")
+            else:
+                continue 
 
             # # 4. Imprimir os nomes das colunas para depuração
             # print("Colunas no dataset:")
             # print(df.columns.tolist())
 
             # 5. Limpar os nomes das colunas: manter só o nome antes da vírgula
-            df = pd.read_excel(caminho, engine='xlrd')  # Ou use 'openpyxl' se for .xlsx
             df.columns = df.columns.str.split(',').str[0]
 
             # 6. Selecionar as colunas relevantes para análise
@@ -94,10 +100,12 @@ def processar_arquivos(pasta):
     for col in colunas_data:
         df[col] = df[col].dt.strftime('%d/%m/%Y')
 
+    # Filtra os casos onde a coluna 'DT_ENCERRA' está vazia (nula)
+    casos_sem_encerramento = df[df['DT_ENCERRA'].isna()]
 
 
     # 11. Salvar o resultado final 
     # df_ve.to_excel('chico_filtrado_ve.xlsx', index=False, engine='openpyxl')
     # df_va.to_excel('chico_filtrado_va.xlsx', index=False, engine='openpyxl')
 
-    return df_ve, df_va
+    return df_ve, df_va, casos_sem_encerramento
