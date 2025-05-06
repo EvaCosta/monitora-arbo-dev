@@ -25,14 +25,18 @@
 
 # CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
 # Usar a imagem oficial do Python como base
+# Usar a imagem oficial do Python como base
 FROM python:3.10-slim
 
 # Definir o diretório de trabalho dentro do contêiner
 WORKDIR /app
 
-# Instalar dependências do sistema básicas, se necessário
+# Instalar dependências do sistema necessárias para o Pillow e outras bibliotecas
 RUN apt-get update && apt-get install -y \
     libffi-dev \
+    libjpeg-dev \
+    zlib1g-dev \
+    libfreetype6-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
