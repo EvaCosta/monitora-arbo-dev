@@ -1,33 +1,26 @@
-# Usar imagem base do Python
-FROM python:3.9-slim
+# Usar a imagem oficial do Python como base
+FROM python:3.10-slim
 
-# Definir diretório de trabalho
+# Definir o diretório de trabalho dentro do contêiner
 WORKDIR /app
 
-# Instalar dependências do sistema
+# Instalar dependências do sistema básicas, se necessário
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    python3-dev \
-    zlib1g-dev \
-    libjpeg-dev \
-    libpng-dev \
-    libfreetype6-dev \
-    liblcms2-dev \
-    libopenjpeg-dev \
-    libtiff-dev \
-    libwebp-dev \
-    tcl8.6-dev tk8.6-dev python3-tk \
-    default-libmysqlclient-dev \
-    gcc
+    libffi-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copiar apenas o requirements.txt (evita rebuilds se o código muda)
+# Copiar o arquivo de requisitos para dentro do contêiner
 COPY requirements.txt /app/
 
-# Instalar dependências Python
+# Instalar as dependências Python
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar o código fonte do projeto
+COPY . /app/
 
 # Expor a porta do Streamlit
 EXPOSE 8501
 
-# Comando de inicialização
+# Comando para rodar o Streamlit
 CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]

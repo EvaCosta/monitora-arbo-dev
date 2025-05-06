@@ -6,3 +6,6 @@ pyrebase==3.0.27
 PyJWT
 plotly
 odfpy
+Pillow
+rich
+
