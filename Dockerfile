@@ -8,8 +8,15 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     build-essential \
     python3-dev \
-    libffi-dev \
     zlib1g-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libfreetype6-dev \
+    liblcms2-dev \
+    libopenjpeg-dev \
+    libtiff-dev \
+    libwebp-dev \
+    tcl8.6-dev tk8.6-dev python3-tk \
     default-libmysqlclient-dev \
     gcc
 
