@@ -24,22 +24,22 @@ auth = firebase.auth()
 # Definindo diretamente o email do usuário (substitua pelo e-mail desejado)
 user_email = "seu_email@exemplo.com"  # Substitua com o e-mail que deseja utilizar
 
-def login():
-    st.title("🔐 Login - Monitora Arboviroses")
-    email = st.text_input("Email")
-    password = st.text_input("Senha", type="password")
-    login_button = st.button("Entrar")
+# def login():
+    # st.title("🔐 Login - Monitora Arboviroses")
+    # email = st.text_input("Email")
+    # password = st.text_input("Senha", type="password")
+    # login_button = st.button("Entrar")
 
-    if login_button:
-        try:
-            user = auth.sign_in_with_email_and_password(email, password)
-            st.session_state['user'] = user
-            st.session_state['email'] = email
-            st.session_state['refreshToken'] = user['refreshToken']
-            st.success(f"Bem-vindo, {email}!")
-            st.experimental_rerun()
-        except Exception as e:
-            st.error("Email ou senha inválidos.")
+    # if login_button:
+    #     try:
+    #         user = auth.sign_in_with_email_and_password(email, password)
+    #         st.session_state['user'] = user
+    #         st.session_state['email'] = email
+    #         st.session_state['refreshToken'] = user['refreshToken']
+    #         st.success(f"Bem-vindo, {email}!")
+    #         st.experimental_rerun()
+    #     except Exception as e:
+    #         st.error("Email ou senha inválidos.")
 
 # Função para download estilizado
 def download_dataframe(df, filename, label):
@@ -140,6 +140,12 @@ def processamento(user_email):
                 st.subheader("🦠 Casos dos Últimos 60 Dias (VE)")
                 st.dataframe(df_ve)
                 download_dataframe(df_ve, "chico_filtrado_ve.csv", "Download VE")
+
+            
+            st.subheader("🦠 Casos sem encerramento")
+            df_casos_sem_encerramento = pd.read_excel(os.path.join(pasta_dados, "casos_sem_encerramento.xlsx"))
+            st.dataframe(df_casos_sem_encerramento)
+            download_dataframe(df_casos_sem_encerramento, "casos_sem_encerramento.csv", "Casos sem encerramento")
         except Exception:
             st.warning("Nenhum dado salvo foi encontrado.")
 
@@ -177,13 +183,14 @@ if 'user' not in st.session_state and 'refreshToken' in st.session_state:
             st.session_state['email'] = user_info['users'][0]['email']
     except Exception:
         st.warning("Sessão expirada. Faça login novamente.")
-        login()
+        # login()
         st.stop()
 
 
 
 if 'user' not in st.session_state:
-    login()
+    processamento(user_email);
+    # login()
 else:
     logout()
     processamento(st.session_state['email'])

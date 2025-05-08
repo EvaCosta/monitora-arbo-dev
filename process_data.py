@@ -24,6 +24,7 @@ def processar_arquivos(pasta):
                 df = pd.read_excel(caminho, engine="xlrd")
             elif extensao == ".ods":
                 df = pd.read_excel(caminho, engine="odf")
+                print(df)
             else:
                 continue 
 
@@ -33,6 +34,7 @@ def processar_arquivos(pasta):
 
             # 5. Limpar os nomes das colunas: manter só o nome antes da vírgula
             df.columns = df.columns.str.split(',').str[0]
+            print("Colunas encontradas:", df.columns.tolist())
 
             # 6. Selecionar as colunas relevantes para análise
             columns_to_select = [
@@ -51,11 +53,14 @@ def processar_arquivos(pasta):
 
         except Exception as e:
             print(f"Erro ao ler {caminho}: {e}")
-            # 7. Concatenar todos os DataFrames
-            df = pd.concat(dfs, ignore_index=True)
+            continue
 
     if not dfs:
         raise ValueError("Nenhum arquivo pôde ser processado com sucesso.")
+    
+    # 7. Concatenar todos os DataFrames
+    df = pd.concat(dfs, ignore_index=True)
+
 
     # 8. Criar coluna MAPA para o Dashboard
     df['MAPA'] = df['NM_BAIRRO'] + ', BRASIL, PERNAMBUCO, RECIFE'
