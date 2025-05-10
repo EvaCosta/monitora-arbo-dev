@@ -35,16 +35,10 @@ RUN pip install --upgrade pip
 
 # Instalar dependências do sistema necessárias para o Pillow e outras bibliotecas
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    python3-dev \
-    libffi-dev \
-    libssl-dev \
-    gcc \
     libjpeg-dev \
     zlib1g-dev \
-    libfreetype6-dev \
-    && apt-get clean
-
+    libpng-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copiar o arquivo de requisitos para dentro do contêiner
 COPY requirements.txt /app/
