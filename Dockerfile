@@ -32,17 +32,18 @@ FROM python:3.9-slim
 WORKDIR /app
 
 RUN pip install --upgrade pip
+
 # Instalar dependências do sistema necessárias para o Pillow e outras bibliotecas
-# RUN apt-get update && apt-get install -y \
-#     build-essential \
-#     python3-dev \
-#     libffi-dev \
-#     libssl-dev \
-#     gcc \
-#     libjpeg-dev \
-#     zlib1g-dev \
-#     libfreetype6-dev \
-#     && apt-get clean
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    python3-dev \
+    libffi-dev \
+    libssl-dev \
+    gcc \
+    libjpeg-dev \
+    zlib1g-dev \
+    libfreetype6-dev \
+    && apt-get clean
 
 
 # Copiar o arquivo de requisitos para dentro do contêiner
