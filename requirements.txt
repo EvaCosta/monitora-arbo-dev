@@ -1,11 +1,9 @@
-pandas
-xlrd
-openpyxl
-streamlit
+pandas==2.2.3
+xlrd==2.0.1
+openpyxl==3.1.5
+streamlit==1.45.0
 pyrebase==3.0.27
-PyJWT
-plotly
-odfpy
-Pillow --only-binary=:all:
-rich
-
+PyJWT==2.10.1
+plotly==6.0.1
+Pillow==9.4.0 --only-binary=:all:
+rich==14.0.0
