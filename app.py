@@ -25,9 +25,9 @@ def login():
     st.title("🔐 Login - Monitora Arboviroses")
     email = st.text_input("Email")
     password = st.text_input("Senha", type="password")
-    login_button = st.button("Entrar")
+    login_clicked = st.button("Entrar")
 
-    if login_button:
+    if login_clicked and 'user' not in st.session_state:
         try:
             user = auth.sign_in_with_email_and_password(email, password)
             st.session_state['user'] = user
