@@ -21,9 +21,6 @@ firebaseConfig = {
 firebase = pyrebase.initialize_app(firebaseConfig)
 auth = firebase.auth()
 
-# Definindo diretamente o email do usuário (substitua pelo e-mail desejado)
-user_email = "seu_email@exemplo.com"  # Substitua com o e-mail que deseja utilizar
-
 def login():
     st.title("🔐 Login - Monitora Arboviroses")
     email = st.text_input("Email")
@@ -193,5 +190,3 @@ if 'user' not in st.session_state:
 else:
     logout()
     processamento(st.session_state['email'])
-# Chamando a função de processamento com o e-mail diretamente
-# processamento(user_email)
