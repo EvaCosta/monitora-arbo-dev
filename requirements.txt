@@ -1,8 +1,9 @@
 streamlit
 pandas
 pyrebase4
+google-cloud-storage
+setuptools
 xlrd
 odfpy
 openpyxl
 plotly
-google-cloud-storage
