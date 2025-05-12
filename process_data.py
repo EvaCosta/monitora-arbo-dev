@@ -23,7 +23,7 @@ def processar_arquivos(pasta):
             if extensao == ".xls":
                 df = pd.read_excel(caminho, engine="xlrd")
             elif extensao == ".ods":
-                df = pd.read_excel(caminho, engine="odf")
+                df = pd.read_excel(caminho, engine="calamine")
                 print(df)
             else:
                 continue 
