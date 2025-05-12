@@ -41,6 +41,7 @@ def login():
             st.session_state['login_success'] = True
             st.session_state['login_error'] = False
             st.experimental_rerun()
+            return
         except Exception as e:
             st.session_state['login_error'] = True
             st.session_state['login_success'] = False
