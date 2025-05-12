@@ -20,14 +20,18 @@ def processar_arquivos(pasta):
         try:
             extensao = os.path.splitext(caminho)[1].lower()
 
-            if extensao == ".xls":
-                df = pd.read_excel(caminho, engine="xlrd")
-            elif extensao == ".ods":
-                df = pd.read_excel(caminho, engine="calamine")
-                print(df)
-            else:
-                continue 
-
+            if extensao == 'xls':
+                df = pd.read_excel(caminho, engine='xlrd')
+            elif extensao == 'ods':
+                try:
+                    df = pd.read_excel(caminho, engine='calamine')
+                except Exception as e1:
+                    print(f'Erro com engine=calamine: {e1}')
+                    try:
+                        df = pd.read_excel(caminho, engine='odf')
+                    except Exception as e2:
+                        print(f'Erro com engine=odf: {e2}')
+                        return None
             # # 4. Imprimir os nomes das colunas para depuração
             # print("Colunas no dataset:")
             # print(df.columns.tolist())
