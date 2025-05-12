@@ -40,6 +40,7 @@ def login():
             st.session_state['email'] = email
             st.session_state['login_success'] = True
             st.session_state['login_error'] = False
+            st.experimental_rerun()
         except Exception as e:
             st.session_state['login_error'] = True
             st.session_state['login_success'] = False
@@ -202,9 +203,3 @@ if 'user' not in st.session_state:
 else:
     logout()
     processamento(st.session_state['email'])
-
-def main():
-    if 'user' in st.session_state:
-        processamento()
-    else:
-        login()
