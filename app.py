@@ -154,26 +154,26 @@ def processamento(user_email):
             st.warning("Nenhum dado salvo foi encontrado.")
 
 # Função de painel admin (se precisar de um painel de admin)
-def admin_panel(user_email):
-    # Verifica se o usuário é o Raquelacionly
-    if user_email == "raquelmlacioli@gmail.com":
-        # Usa uma variável local para controle
-        show_register = False
+# def admin_panel(user_email):
+#     # Verifica se o usuário é o Raquelacionly
+#     if user_email == "raquelmlacioli@gmail.com":
+#         # Usa uma variável local para controle
+#         show_register = False
 
-        if st.button("Cadastrar Novo Usuário ➕"):
-            show_register = True
+#         if st.button("Cadastrar Novo Usuário ➕"):
+#             show_register = True
 
-        if show_register:
-            st.subheader("👤 Cadastro de Novo Usuário")
-            new_email = st.text_input("Novo email")
-            new_password = st.text_input("Nova senha", type="password")
+#         if show_register:
+#             st.subheader("👤 Cadastro de Novo Usuário")
+#             new_email = st.text_input("Novo email")
+#             new_password = st.text_input("Nova senha", type="password")
 
-            if st.button("Cadastrar novo usuário"):
-                try:
-                    auth.create_user_with_email_and_password(new_email, new_password)
-                    st.success(f"Usuário {new_email} criado com sucesso!")
-                except Exception as e:
-                    st.error(f"Erro ao criar usuário: {e}")
+#             if st.button("Cadastrar novo usuário"):
+#                 try:
+#                     auth.create_user_with_email_and_password(new_email, new_password)
+#                     st.success(f"Usuário {new_email} criado com sucesso!")
+#                 except Exception as e:
+#                     st.error(f"Erro ao criar usuário: {e}")
     
 
 
@@ -213,5 +213,5 @@ if 'user' not in st.session_state:
 
 else:
     logout()
-    admin_panel(st.session_state['email']) 
+    # admin_panel(st.session_state['email']) 
     processamento(st.session_state['email'])
