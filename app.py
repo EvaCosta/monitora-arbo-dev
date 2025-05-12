@@ -247,7 +247,7 @@ def login():
             st.session_state.email = email
             st.session_state.login_success = True
             st.session_state.login_error = False
-            st.experimental_rerun()
+            st.stop() 
 
         except:
             st.session_state.login_error = True
@@ -277,6 +277,7 @@ def processamento():
 def main():
     if "user" in st.session_state:
         processamento()
+
     else:
         login()
         st.stop()
