@@ -1,11 +1,11 @@
 import streamlit as st
-import streamlit.components.v1 as components
 from process_data import processar_arquivos
 import pyrebase
 import pandas as pd
 import base64
 import os
 import shutil
+
 firebaseConfig = {
     "apiKey": "AIzaSyDjeRvV8yHAUmzDbiv2laM5tVM5iFXBByw",
     "authDomain": "monitora-arbo.firebaseapp.com",
@@ -23,34 +23,27 @@ auth = firebase.auth()
 def login():
     st.title("🔐 Login - Monitora Arboviroses")
 
-    if "login_error" not in st.session_state:
-        st.session_state.login_error = False
-    if "login_success" not in st.session_state:
-        st.session_state.login_success = False
-
+    # Captura o email e senha do usuário
     email = st.text_input("Email")
     password = st.text_input("Senha", type="password")
 
-    login_clicked = st.button("Entrar")
+    # Se o login foi bem-sucedido, exibe a mensagem
+    if 'login_success' in st.session_state and st.session_state['login_success']:
+        st.success(f"Bem-vindo, {st.session_state['email']}!")
+        return
 
-    if login_clicked and 'user' not in st.session_state:
+    # Tenta fazer login quando o botão é pressionado
+    if st.button("Entrar"):
         try:
             user = auth.sign_in_with_email_and_password(email, password)
             st.session_state['user'] = user
             st.session_state['email'] = email
             st.session_state['login_success'] = True
-            st.session_state['login_error'] = False
             st.experimental_rerun()
-            return
-        except Exception as e:
-            st.session_state['login_error'] = True
+        except Exception:
             st.session_state['login_success'] = False
-    
-    if st.session_state.login_success:
-        st.success(f"Bem-vindo, {st.session_state['email']}!")
+            st.error("Email ou senha inválidos.")
 
-    if st.session_state.login_error:
-        st.error("Email ou senha inválidos.")
 
 # Função para download estilizado
 def download_dataframe(df, filename, label):
@@ -161,46 +154,64 @@ def processamento(user_email):
             st.warning("Nenhum dado salvo foi encontrado.")
 
 # Função de painel admin (se precisar de um painel de admin)
-def admin_panel():
-    if st.button("Cadastrar Novo Usuário ➕"):
-        st.session_state.show_register = True
+def admin_panel(user_email):
+    # Verifica se o usuário é o Raquelacionly
+    if user_email == "raquelmlacioli@gmail.com":
+        # Usa uma variável local para controle
+        show_register = False
 
-    if st.session_state.show_register:
-        st.subheader("👤 Cadastro de Novo Usuário")
-        new_email = st.text_input("Novo email")
-        new_password = st.text_input("Nova senha", type="password")
+        if st.button("Cadastrar Novo Usuário ➕"):
+            show_register = True
 
-        if st.button("Cadastrar novo usuário"):
-            try:
-                auth.create_user_with_email_and_password(new_email, new_password)
-                st.success(f"Usuário {new_email} criado com sucesso!")
-            except Exception as e:
-                st.error(f"Erro ao criar usuário: {e}")
+        if show_register:
+            st.subheader("👤 Cadastro de Novo Usuário")
+            new_email = st.text_input("Novo email")
+            new_password = st.text_input("Nova senha", type="password")
+
+            if st.button("Cadastrar novo usuário"):
+                try:
+                    auth.create_user_with_email_and_password(new_email, new_password)
+                    st.success(f"Usuário {new_email} criado com sucesso!")
+                except Exception as e:
+                    st.error(f"Erro ao criar usuário: {e}")
+    
 
 
 def logout():
-    if st.sidebar.button("🔒 Logout"):
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
-        st.rerun()
+    user_email = st.session_state.get("email", "Usuário")
 
-if 'user' not in st.session_state and 'refreshToken' in st.session_state:
-    try:
-        user = auth.refresh(st.session_state['refreshToken'])
-        st.session_state['user'] = user
-        if 'email' not in st.session_state:
-            # Tenta recuperar o email a partir do idToken
-            user_info = auth.get_account_info(user['idToken'])
-            st.session_state['email'] = user_info['users'][0]['email']
-    except Exception:
-        st.warning("Sessão expirada. Faça login novamente.")
-        login() 
-        st.stop()
+    col1, col2 = st.columns([5, 1])
+    with col1:
+        st.markdown(f"""
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 16px;">👤</span>
+                <span style="font-size: 16px;">{user_email}</span>
+            </div>
+        """, unsafe_allow_html=True)
+    with col2:
+        if st.button("🔒 Sair", type="primary"):
+            st.session_state.clear()
+            st.rerun()
+
+# if 'user' not in st.session_state and 'refreshToken' in st.session_state:
+#     try:
+#         user = auth.refresh(st.session_state['refreshToken'])
+#         st.session_state['user'] = user
+#         if 'email' not in st.session_state:
+#             # Tenta recuperar o email a partir do idToken
+#             user_info = auth.get_account_info(user['idToken'])
+#             st.session_state['email'] = user_info['users'][0]['email']
+#     except Exception:
+#         st.warning("Sessão expirada. Faça login novamente.")
+#         login() 
+#         st.stop()
 
 
 
 if 'user' not in st.session_state:
     login()
+
 else:
     logout()
+    admin_panel(st.session_state['email']) 
     processamento(st.session_state['email'])

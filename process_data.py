@@ -20,9 +20,9 @@ def processar_arquivos(pasta):
         try:
             extensao = os.path.splitext(caminho)[1].lower()
 
-            if extensao == 'xls':
+            if extensao == '.xls':
                 df = pd.read_excel(caminho, engine='xlrd')
-            elif extensao == 'ods':
+            elif extensao == '.ods':
                 try:
                     df = pd.read_excel(caminho, engine='calamine')
                 except Exception as e1:
@@ -84,6 +84,8 @@ def processar_arquivos(pasta):
     df['NU_IDADE_N'] = df['NU_IDADE_N'] - 4000
     df['CS_RACA'] = df['CS_RACA'].map(raca_mapping)
     df['EVOLUCAO'] = df['EVOLUCAO'].map(evolucao_mapping)
+    df['DT_DIGITA'] = pd.to_datetime(df['DT_DIGITA'], errors='coerce')
+    df['DT_NOTIFIC'] = pd.to_datetime(df['DT_NOTIFIC'], errors='coerce')
     df['OPORTUNIDADE_SINAN'] = (df['DT_DIGITA'] - df['DT_NOTIFIC']).dt.days
 
 
@@ -107,7 +109,9 @@ def processar_arquivos(pasta):
     # 10. Formatar colunas de data no formato dd/mm/yyyy
     colunas_data = ['DT_NOTIFIC', 'DT_SIN_PRI', 'DT_NASC', 'DT_ENCERRA', 'DT_DIGITA']
     for col in colunas_data:
-        df[col] = df[col].dt.strftime('%d/%m/%Y')
+        df[col] = pd.to_datetime(df[col], errors='coerce')
+        if pd.api.types.is_datetime64_any_dtype(df[col]):
+            df[col] = df[col].dt.strftime('%d/%m/%Y')
 
     # Filtra os casos onde a coluna 'DT_ENCERRA' está vazia (nula)
     casos_sem_encerramento = df[df['DT_ENCERRA'].isna()]
