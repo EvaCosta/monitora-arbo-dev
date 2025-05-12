@@ -7,3 +7,4 @@ xlrd
 odfpy
 openpyxl
 plotly
+python-calamine

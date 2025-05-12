@@ -11,7 +11,7 @@ def processar_arquivos(pasta):
     if not arquivos_planilhas:
         raise ValueError("Nenhum arquivo .xls ou .ods encontrado na pasta.")
 
-    # 2. Lista para armazenar DataFrames
+    # 2. Lista para armazenar DataFrames    
     dfs = []
 
     # 3. Iterar sobre cada arquivo e aplicar o processamento inicial
