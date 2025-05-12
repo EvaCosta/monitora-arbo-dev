@@ -247,6 +247,8 @@ def login():
             st.session_state.email = email
             st.session_state.login_success = True
             st.session_state.login_error = False
+            st.experimental_rerun()
+
         except:
             st.session_state.login_error = True
             st.session_state.login_success = False
