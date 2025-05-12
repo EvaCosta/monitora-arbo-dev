@@ -279,6 +279,7 @@ def main():
         processamento()
     else:
         login()
+        st.stop()
 
 if __name__ == "__main__":
     main()
